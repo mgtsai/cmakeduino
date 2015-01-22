@@ -12,7 +12,7 @@ include(CMakeParseArguments)
 # In-out:
 #   list_var: The variable of the list which the specified entries to be appended into
 #
-function(arduino_util_list_append_uniquely list_var)
+function(cmakeduino_util_list_append_uniquely list_var)
     foreach (entry ${ARGN})
         list(FIND ${list_var} ${entry} entry_index)
         if (entry_index LESS 0)
@@ -34,7 +34,7 @@ endfunction()
 # Output:
 #   var_prefix: Variables ${var_prefix}.xxx contain parsed argument values
 #
-function(arduino_util_parse_arguments var_prefix opts args multi_args)
+function(cmakeduino_util_parse_arguments var_prefix opts args multi_args)
     cmake_parse_arguments(__input "${opts}" "${args}" "${multi_args}" ${ARGN})
 
     set(unparsed_args ${__input_UNPARSED_ARGUMENTS})
@@ -56,7 +56,7 @@ endfunction()
 # In-out:
 #   dest_var_prefix: Variables ${dest_var_prefix}.xxx to be copied to if not set yet
 #
-function(arduino_util_copy_subvariables_if_not_set dest_var_prefix src_var_prefix)
+function(cmakeduino_util_copy_subvariables_if_not_set dest_var_prefix src_var_prefix)
     foreach (subvar ${ARGN})
         if ((NOT ${dest_var_prefix}.${subvar}) AND ${src_var_prefix}.${subvar})
             set(${dest_var_prefix}.${subvar} ${${src_var_prefix}.${subvar}} PARENT_SCOPE)
@@ -72,12 +72,12 @@ endfunction()
 # In-out:
 #   inc_hdrs_var: The variable containing include headers
 #
-function(arduino_util_read_includes inc_hdrs_var src_file)
+function(cmakeduino_util_read_includes inc_hdrs_var src_file)
     file(STRINGS ${src_file} lines)
 
     foreach (line ${lines})
         if ("${line}" MATCHES "^[ \t]*#[ \t]*include[ \t]*[<\"]([^>\"]*)[>\"]")
-            arduino_util_list_append_uniquely(${inc_hdrs_var} ${CMAKE_MATCH_1})
+            cmakeduino_util_list_append_uniquely(${inc_hdrs_var} ${CMAKE_MATCH_1})
         endif()
     endforeach()
 
